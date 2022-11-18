@@ -17,7 +17,7 @@ type Square = {
   };
 };
 
-const SQUARES_PER_SIDE = 3;
+const squaresPerSide = ref<number>(3);
 const SIDE_IN_PIXELS = 300;
 
 const canvasRef = ref<HTMLCanvasElement>();
@@ -26,12 +26,12 @@ const context = computed<CanvasRenderingContext2D | undefined>(
 );
 
 const squares = computed<Square[]>(() => {
-  const size = SIDE_IN_PIXELS / SQUARES_PER_SIDE;
+  const size = SIDE_IN_PIXELS / squaresPerSide.value;
   return Array.from(
-    { length: SQUARES_PER_SIDE * SQUARES_PER_SIDE },
-    (val, index) => {
-      const x = (index % SQUARES_PER_SIDE) * size;
-      const y = Math.ceil(index / SQUARES_PER_SIDE) * size;
+    { length: squaresPerSide.value * squaresPerSide.value },
+    (_, index) => {
+      const x = (index % squaresPerSide.value) * size;
+      const y = Math.floor(index / squaresPerSide.value) * size;
       return {
         origin: { x, y },
         size: { width: size, height: size },
@@ -44,7 +44,8 @@ const squares = computed<Square[]>(() => {
     }
   );
 });
-watch(context, () => {
+
+watch([context, squaresPerSide], () => {
   if (!context?.value) return;
   draw(context.value, squares.value);
 });
@@ -59,6 +60,7 @@ const draw = (context: CanvasRenderingContext2D, squares: Square[]) => {
 
 <template>
   <canvas width="300" height="300" ref="canvasRef"> fallback text </canvas>
+  <input type="number" step="1" v-model="squaresPerSide" />
 </template>
 
 <style scoped></style>
