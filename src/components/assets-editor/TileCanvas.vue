@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Colors from "@/constants/colors";
 import { computed, ref, watch } from "vue";
 import type { Mosaic, Coordinate } from "./types";
 
@@ -61,8 +62,8 @@ const draw = (context: CanvasRenderingContext2D, { squares }: Mosaic) => {
     const area = getSquareArea(index);
     context.fillStyle = s.color;
     context.fillRect(area.x.min, area.y.min, area.x.max, area.y.max);
-    // context.strokeStyle = "#ffffff";
-    // context.strokeRect(area.x.min, area.y.min, area.x.max, area.y.max);
+    context.strokeStyle = Colors.bg2;
+    context.strokeRect(area.x.min, area.y.min, area.x.max, area.y.max);
   });
 };
 
