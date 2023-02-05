@@ -30,7 +30,7 @@ input {
   font-size: $font-size-normal;
   padding: $space-normal;
   margin: $space-normal;
-  box-shadow: 3px 3px 0 0 $color-box-shadow;
+  box-shadow: $space-small $space-small 0 0 $color-box-shadow;
   outline: none;
 }
 </style>

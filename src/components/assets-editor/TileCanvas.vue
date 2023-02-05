@@ -134,7 +134,9 @@ const handleCanvasClick = ({ x, y }: MouseEvent) => {
 <style scoped lang="scss">
 @import "../../assets/variables.scss";
 canvas {
+  background-color: $palette-bg2;
+  padding: $space-small;
   margin: $space-normal;
-  box-shadow: 3px 3px 0 0 $color-box-shadow;
+  box-shadow: $space-small $space-small 0 0 $color-box-shadow;
 }
 </style>

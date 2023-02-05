@@ -12,7 +12,7 @@ button {
   border: none;
   font-size: $font-size-large;
   font-family: "Monospace";
-  box-shadow: 3px 3px 0px 0px $color-box-shadow;
+  box-shadow: $space-small $space-small 0px 0px $color-box-shadow;
   padding: $space-normal;
   margin: $space-normal;
   cursor: pointer;

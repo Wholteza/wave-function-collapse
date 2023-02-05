@@ -29,7 +29,7 @@ input {
   font-size: $font-size-large;
   padding: $space-small;
   margin: $space-normal;
-  box-shadow: 3px 3px 0 0 $color-box-shadow;
+  box-shadow: $space-small $space-small 0 0 $color-box-shadow;
   box-sizing: content-box;
   cursor: pointer;
 }
