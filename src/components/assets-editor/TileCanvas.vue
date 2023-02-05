@@ -61,8 +61,8 @@ const draw = (context: CanvasRenderingContext2D, { squares }: Mosaic) => {
     const area = getSquareArea(index);
     context.fillStyle = s.color;
     context.fillRect(area.x.min, area.y.min, area.x.max, area.y.max);
-    context.strokeStyle = "#ffffff";
-    context.strokeRect(area.x.min, area.y.min, area.x.max, area.y.max);
+    // context.strokeStyle = "#ffffff";
+    // context.strokeRect(area.x.min, area.y.min, area.x.max, area.y.max);
   });
 };
 
@@ -98,4 +98,10 @@ const handleCanvasClick = ({ x, y }: MouseEvent) => {
   </canvas>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+@import "../../assets/variables.scss";
+canvas {
+  margin: $space-normal;
+  box-shadow: 3px 3px 0 0 $color-box-shadow;
+}
+</style>

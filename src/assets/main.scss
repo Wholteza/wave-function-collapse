@@ -1,0 +1,10 @@
+@import "variables.scss";
+
+body{
+  margin: 0;
+  padding: 0;
+  background-color: $color-background;
+  color: $color-foreground;
+  font-size: $font-size-normal;
+  font-family: 'Monospace';
+}
