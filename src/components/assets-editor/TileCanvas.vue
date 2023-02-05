@@ -1,32 +1,55 @@
 <script setup lang="ts">
 import Colors from "@/constants/colors";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import type { Mosaic, Coordinate } from "./types";
 
 const props = defineProps<{
   editable?: boolean;
-  sizeInPixels: number;
   mosaic: Mosaic;
   color?: string;
 }>();
 
-const mosaic = ref<Mosaic>(props.mosaic);
-const squaresPerSide = ref<number>(Math.sqrt(props.mosaic.squares.length));
-const squareSizeInPixels = ref<number>(
-  props.sizeInPixels / squaresPerSide.value
-);
 const canvasRef = ref<HTMLCanvasElement>();
+const sizeInPixels = computed(() => {
+  const rect = canvasRef.value?.getBoundingClientRect();
+  return rect?.right ?? undefined;
+});
+
+const mosaic = ref<Mosaic>(props.mosaic);
+const squaresPerSide = computed(() => Math.sqrt(mosaic.value.squares.length));
+const squareSizeInPixels = computed(() => {
+  console.log(sizeInPixels.value, squaresPerSide.value);
+  if (!sizeInPixels.value) return 0;
+  return sizeInPixels.value / squaresPerSide.value;
+});
+
 const context = computed<CanvasRenderingContext2D | undefined>(
   () => canvasRef.value?.getContext("2d") ?? undefined
 );
 
+const draw = () => {
+  const ctx = context.value;
+  const squares = mosaic.value.squares;
+  if (!ctx) return;
+  squares.forEach((s, index) => {
+    const area = getSquareArea(index);
+    ctx.fillStyle = s.color;
+    ctx.fillRect(area.x.min, area.y.min, area.x.max, area.y.max);
+    ctx.strokeStyle = Colors.bg2;
+    ctx.strokeRect(area.x.min, area.y.min, area.x.max, area.y.max);
+  });
+};
+
+onMounted(() => {
+  window.requestAnimationFrame(draw);
+});
+
 watch(
-  [context, props.mosaic, mosaic],
+  [context, mosaic, sizeInPixels, squareSizeInPixels],
   () => {
-    if (!context?.value) return;
-    draw(context.value, mosaic.value);
+    window.requestAnimationFrame(draw);
   },
-  { deep: true }
+  { deep: true, immediate: true }
 );
 
 type Area = {
@@ -45,6 +68,7 @@ const getSquareArea = (squareIndex: number): Area => {
     (squareIndex % squaresPerSide.value) * squareSizeInPixels.value;
   const yOrigin =
     Math.floor(squareIndex / squaresPerSide.value) * squareSizeInPixels.value;
+
   return {
     x: {
       min: xOrigin,
@@ -57,20 +81,28 @@ const getSquareArea = (squareIndex: number): Area => {
   };
 };
 
-const draw = (context: CanvasRenderingContext2D, { squares }: Mosaic) => {
-  squares.forEach((s, index) => {
-    const area = getSquareArea(index);
-    context.fillStyle = s.color;
-    context.fillRect(area.x.min, area.y.min, area.x.max, area.y.max);
-    context.strokeStyle = Colors.bg2;
-    context.strokeRect(area.x.min, area.y.min, area.x.max, area.y.max);
-  });
+const getGlobalSquareArea = (squareArea: Area): Area => {
+  const rect = canvasRef.value?.getBoundingClientRect();
+  const globalX = rect?.x ?? 0;
+  const globalY = rect?.y ?? 0;
+  return {
+    x: {
+      min: squareArea.x.min + globalX,
+      max: squareArea.x.max + globalX,
+    },
+    y: {
+      min: squareArea.y.min + globalY,
+      max: squareArea.y.max + globalY,
+    },
+  };
 };
 
-const findSquare = (coordinate: Coordinate) =>
-  mosaic.value.squares.find((s, index) =>
-    isWithinSquareArea(getSquareArea(index), coordinate)
+const findSquare = (coordinate: Coordinate) => {
+  const square = mosaic.value.squares.find((s, index) =>
+    isWithinSquareArea(getGlobalSquareArea(getSquareArea(index)), coordinate)
   );
+  return square;
+};
 
 const isWithinSquareArea = (area: Area, { x, y }: Coordinate) => {
   const isWithinX = area.x.min <= x && x <= area.x.max;
@@ -84,14 +116,14 @@ const handleCanvasClick = ({ x, y }: MouseEvent) => {
   if (!square) return;
   square.color = props.color ?? "#000000";
   if (!context.value) return;
-  draw(context.value, mosaic.value);
+  draw();
 };
 </script>
 
 <template>
   <canvas
-    :width="props.sizeInPixels"
-    :height="props.sizeInPixels"
+    :width="sizeInPixels"
+    :height="sizeInPixels"
     ref="canvasRef"
     @click="handleCanvasClick"
   >

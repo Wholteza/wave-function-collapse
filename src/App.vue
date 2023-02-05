@@ -7,8 +7,6 @@ import UiColorPicker from "./components/ui/UiColorPicker.vue";
 import UiNumberInput from "./components/ui/UiNumberInput.vue";
 import { generateSquares } from "./helpers/mosaic";
 
-const SIDE_IN_PIXELS = 300;
-
 const squaresPerSide = ref<number>(3);
 const color = ref<string>("#000000");
 const mosaic = ref<Mosaic>({ squares: generateSquares(squaresPerSide.value) });
@@ -23,12 +21,7 @@ const handleOnNext = () => {
 
 <template>
   <div class="app-container">
-    <TileCanvas
-      editable
-      :mosaic="mosaic"
-      :size-in-pixels="SIDE_IN_PIXELS"
-      :color="color"
-    />
+    <TileCanvas editable :mosaic="mosaic" :color="color" />
 
     <div class="size-picker-container">
       <div>Sides:</div>
@@ -51,12 +44,7 @@ const handleOnNext = () => {
 
     <UiButton @click="handleOnNext">Next</UiButton>
 
-    <TileCanvas
-      v-for="(m, index) in oldMosaic"
-      :mosaic="m"
-      :size-in-pixels="SIDE_IN_PIXELS"
-      :key="index"
-    />
+    <TileCanvas v-for="(m, index) in oldMosaic" :mosaic="m" :key="index" />
   </div>
 </template>
 
