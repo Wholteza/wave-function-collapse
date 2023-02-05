@@ -22,27 +22,27 @@ const handleOnNext = () => {
 <template>
   <div class="app-container">
     <TileCanvas editable :mosaic="mosaic" :color="color" />
+    <div class="options-container">
+      <div class="size-picker-container">
+        <div>Sides:</div>
+        <UiNumberInput
+          class="squares-per-side-input"
+          :value="squaresPerSide"
+          :step="1"
+          @change="(value) => (squaresPerSide = value)"
+        />
+      </div>
 
-    <div class="size-picker-container">
-      <div>Sides:</div>
-      <UiNumberInput
-        class="squares-per-side-input"
-        :value="squaresPerSide"
-        :step="1"
-        @change="(value) => (squaresPerSide = value)"
-      />
+      <div class="color-picker-container">
+        <div>Color:</div>
+        <UiColorPicker
+          class="color-input"
+          :value="color"
+          @change="(newColor) => (color = newColor)"
+        />
+      </div>
+      <UiButton @click="handleOnNext">Next</UiButton>
     </div>
-
-    <div class="color-picker-container">
-      <div>Color:</div>
-      <UiColorPicker
-        class="color-input"
-        :value="color"
-        @change="(newColor) => (color = newColor)"
-      />
-    </div>
-
-    <UiButton @click="handleOnNext">Next</UiButton>
 
     <TileCanvas v-for="(m, index) in oldMosaic" :mosaic="m" :key="index" />
   </div>
@@ -53,23 +53,34 @@ const handleOnNext = () => {
 .app-container {
   display: flex;
   flex-direction: column;
-  width: 50vw;
+  width: 70vw;
   margin: 0 auto;
   background-color: $color-background;
-  .color-picker-container {
+  .options-container {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    .color-input {
-      width: 10vw;
+    flex-direction: column;
+    background-color: $palette-bg2;
+    box-shadow: $space-small $space-small 0 0 $color-box-shadow;
+    margin: $space-normal;
+    padding: $space-normal;
+    button {
+      align-self: center;
     }
-  }
-  .size-picker-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    .squares-per-side-input {
-      width: 10vw;
+    .color-picker-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .color-input {
+        width: 10vw;
+      }
+    }
+    .size-picker-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .squares-per-side-input {
+        width: 10vw;
+      }
     }
   }
 }

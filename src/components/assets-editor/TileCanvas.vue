@@ -9,6 +9,9 @@ const props = defineProps<{
   color?: string;
 }>();
 
+const mouse = ref<{ x: number; y: number } | undefined>();
+const mouse2 = ref<{ x: number; y: number } | undefined>();
+
 const canvasRef = ref<HTMLCanvasElement>();
 const sizeInPixels = computed(() => {
   const rect = canvasRef.value?.getBoundingClientRect();
@@ -99,7 +102,7 @@ const getGlobalSquareArea = (squareArea: Area): Area => {
 
 const findSquare = (coordinate: Coordinate) => {
   const square = mosaic.value.squares.find((s, index) =>
-    isWithinSquareArea(getGlobalSquareArea(getSquareArea(index)), coordinate)
+    isWithinSquareArea(getSquareArea(index), coordinate)
   );
   return square;
 };
@@ -110,9 +113,24 @@ const isWithinSquareArea = (area: Area, { x, y }: Coordinate) => {
   return isWithinX && isWithinY;
 };
 
-const handleCanvasClick = ({ x, y }: MouseEvent) => {
+const getMousePos = (canvas: HTMLCanvasElement, evt: MouseEvent) => {
+  var rect = canvas.getBoundingClientRect(),
+    scaleX = canvas.width / rect.width,
+    scaleY = canvas.height / rect.height;
+
+  return {
+    x: (evt.clientX - rect.left) * scaleX,
+    y: (evt.clientY - rect.top) * scaleY,
+  };
+};
+
+const handleCanvasClick = (event: MouseEvent) => {
   if (!props.editable) return;
-  const square = findSquare({ x, y });
+  const mousePosition = canvasRef.value && getMousePos(canvasRef.value, event);
+  const square = findSquare({
+    x: mousePosition?.x ?? 0,
+    y: mousePosition?.y ?? 0,
+  });
   if (!square) return;
   square.color = props.color ?? "#000000";
   if (!context.value) return;

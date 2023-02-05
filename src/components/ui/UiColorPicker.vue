@@ -24,12 +24,12 @@ input {
   margin: 0;
   padding: 0;
   border: 0;
-  background-color: $color-background-secondary;
+  background-color: $palette-bg3;
   color: $color-foreground;
   font-size: $font-size-large;
   padding: $space-small;
   margin: $space-normal;
-  box-shadow: $space-small $space-small 0 0 $color-box-shadow;
+  box-shadow: $space-small $space-small 0 0 $palette-fg4;
   box-sizing: content-box;
   cursor: pointer;
 }
