@@ -15,21 +15,20 @@ const oldMosaic = ref<Mosaic[]>([]);
 const handleOnNext = () => {
   oldMosaic.value = [...oldMosaic.value, { ...mosaic.value }];
   mosaic.value = { squares: generateSquares(squaresPerSide.value) };
-  console.log(oldMosaic.value.length);
 };
 </script>
 
 <template>
   <div class="app-container">
-    <TileCanvas editable :mosaic="mosaic" :color="color" />
+    {{ squaresPerSide }}
+    <TileCanvas editable :mosaic="mosaic" :color="color" class="main-canvas" />
     <div class="options-container">
       <div class="size-picker-container">
         <div>Sides:</div>
         <UiNumberInput
           class="squares-per-side-input"
-          :value="squaresPerSide"
+          v-model="squaresPerSide"
           :step="1"
-          @change="(value) => (squaresPerSide = value)"
         />
       </div>
 
@@ -44,7 +43,14 @@ const handleOnNext = () => {
       <UiButton @click="handleOnNext">Next</UiButton>
     </div>
 
-    <TileCanvas v-for="(m, index) in oldMosaic" :mosaic="m" :key="index" />
+    <div class="gallery-container">
+      <TileCanvas
+        v-for="(m, index) in oldMosaic"
+        :mosaic="m"
+        :key="index"
+        class="other-canvas"
+      />
+    </div>
   </div>
 </template>
 
@@ -53,10 +59,27 @@ const handleOnNext = () => {
 .app-container {
   display: flex;
   flex-direction: column;
-  width: 70vw;
+  width: 50vw;
   margin: 0 auto;
   background-color: $color-background;
-  .options-container {
+
+  .main-canvas {
+    width: 75%;
+  }
+  .gallery-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: 10vw;
+    height: 100vh;
+    max-height: 100vh;
+    .other-canvas {
+      width: 100%;
+    }
+  }
+  § .options-container {
     display: flex;
     flex-direction: column;
     background-color: $palette-bg2;

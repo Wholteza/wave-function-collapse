@@ -9,9 +9,6 @@ const props = defineProps<{
   color?: string;
 }>();
 
-const mouse = ref<{ x: number; y: number } | undefined>();
-const mouse2 = ref<{ x: number; y: number } | undefined>();
-
 const canvasRef = ref<HTMLCanvasElement>();
 const sizeInPixels = computed(() => {
   const rect = canvasRef.value?.getBoundingClientRect();
@@ -21,7 +18,6 @@ const sizeInPixels = computed(() => {
 const mosaic = ref<Mosaic>(props.mosaic);
 const squaresPerSide = computed(() => Math.sqrt(mosaic.value.squares.length));
 const squareSizeInPixels = computed(() => {
-  console.log(sizeInPixels.value, squaresPerSide.value);
   if (!sizeInPixels.value) return 0;
   return sizeInPixels.value / squaresPerSide.value;
 });

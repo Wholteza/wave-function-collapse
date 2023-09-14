@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-
 const props = defineProps<{
-  value: number | undefined;
+  modelValue: number | undefined;
   step?: number | undefined;
 }>();
 const emit = defineEmits<{
-  (e: "change", value: number): void;
+  (e: "update:modelValue", value: number): void;
 }>();
 
-const value = ref(props.value);
-watch(value, (newValue) => emit("change", newValue ?? 0));
+const onInput = (event) => {
+  console.log(event);
+  emit('update:modelValue', event.)
+}
 </script>
 
 <template>
-  <input type="number" v-model="value" :step="props.step" />
+  <input
+    type="number"
+    :value="modelValue"
+    :step="props.step"
+    @input="
+      (value) => {
+        $emit('update:modelValue', value);
+      }
+    "
+  />
 </template>
 
 <style scoped lang="scss">
